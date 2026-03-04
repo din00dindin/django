@@ -1,5 +1,6 @@
 {% load static %}
 <h2><a href="/contact/">Contact Us</a></h2>
+<a href="{% url 'contact' %}">Contact</a>
 
 <link rel="stylesheet" href="{% static 'polls/style.css' %}">
 {% if latest_question_list %}
