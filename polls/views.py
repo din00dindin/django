@@ -7,6 +7,8 @@ from django.utils import timezone
 
 from .models import Choice, Question
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from .models import Account
 
 class IndexView(generic.ListView):
     template_name = "polls/index.html"
@@ -75,3 +77,14 @@ def test(request):
         return HttpResponse(str(request.body))
     else:
         return HttpResponse("No POST")
+
+def create_account(request):
+    if request.method == POST:
+        login = request.POST.get("login")
+        password = request.POST.get("password")
+
+        Account.objects.create(
+            login=login,
+            password=password
+        )
+        return JsonResponse({"text" : "Account created"})
