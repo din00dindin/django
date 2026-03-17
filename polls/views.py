@@ -9,6 +9,7 @@ from .models import Choice, Question
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import Account
+import json
 
 class IndexView(generic.ListView):
     template_name = "polls/index.html"
@@ -73,10 +74,19 @@ def vote(request, question_id):
 
 @csrf_exempt
 def test(request):
-    if request.method == POST:
-        return HttpResponse(str(request.body))
+    if request.method == "POST":
+        data = json.loads(request.body)
+        login = data.get("login")
+        password = data.get("password")
+        
+        Account.objects.create(
+            login=login,
+            password=password
+        )
+        return JsonResponse({"message" : "Account created"})
     else:
-        return HttpResponse("No POST")
+        return HttpResponse("the method is not supported,send a POST request ho")
+
 
 def create_account(request):
     if request.method == POST:
@@ -88,3 +98,17 @@ def create_account(request):
             password=password
         )
         return JsonResponse({"text" : "Account created"})
+
+def read(request):
+    if request.method == "GET":
+        account = Account.objects.all()
+
+
+def encode(text, n):
+    if char.isalpha():
+        shift = (ord(char)-ord('a')+ n)
+        result += chr(ord('a')+ shift)
+    else:
+        result += char 
+    
+    return result
