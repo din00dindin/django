@@ -99,10 +99,49 @@ def create_account(request):
         )
         return JsonResponse({"text" : "Account created"})
 
-def read(request):
+def get_accounts(request):
     if request.method == "GET":
-        account = Account.objects.all()
+        accounts = Account.objects.all()
 
+        data = []
+        for acc in accounts:
+            data.append({
+                "id" : acc.id,
+                "login" : acc.login,
+                "password" : acc.password
+            })
+    return JsonResponse(data, safe=False)   
+
+def get_account(request, id):
+    if request.method == "GET":
+        acc = Account.objects.get(id=id)
+
+    return JsonResponse({
+                "id" : acc.id,
+                "login" : acc.login,
+                "password" : acc.password
+            })       
+
+
+def update_account(request, id):
+    if request.method == "PATCH":
+        data = json.loads(request.body)
+
+        acc = Account.objects.get(id=id)
+
+        acc.login = data.get("login")
+        acc.password = data.get("password")
+
+        acc.save()
+
+        return JsonRestornse({"message": "updated"})
+
+def delete_account(request, id):
+    if request.method == "DELETE":
+        acc.Account.objects.get(id=id)
+        acc.delete()
+
+    return JsonResponse({"message":"deleted"})
 
 def encode(text, n):
     if char.isalpha():
